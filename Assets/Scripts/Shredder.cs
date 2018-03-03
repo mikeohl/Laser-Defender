@@ -1,19 +1,13 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* Shredder destroys game objects that trigger collider
+ * object. Keeps laser projectiles from proliferating
+ * continuously.
+ */
+
+using UnityEngine;
 
 public class Shredder : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
-	void OnTriggerEnter2D(Collider2D col) {
-		Destroy(col.gameObject);
+	void OnTriggerEnter2D(Collider2D collider) {
+		Destroy(collider.gameObject);
 	}
 }
