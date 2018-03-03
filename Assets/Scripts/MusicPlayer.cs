@@ -1,5 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* MusicPlayer initiates music track for each specific level
+ * through a persistent music player instance.
+ */
+
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MusicPlayer : MonoBehaviour {
 
@@ -10,16 +14,36 @@ public class MusicPlayer : MonoBehaviour {
 	public AudioClip endClip;
 	
 	private AudioSource music;
-	
-	void Awake () {
-		//Debug.Log ("Music player Awake " + GetInstanceID());
 
-	}
-	
-	// Use this for initialization
-	void Start () {
-		//Debug.Log ("Music player Start " + GetInstanceID());
-		if (instance != null && instance != this) { 
+    // Play music when scene is loaded through Unity SceneManagement
+    void OnEnable() { SceneManager.sceneLoaded += OnSceneLoaded; }
+    void OnDisable() { SceneManager.sceneLoaded -= OnSceneLoaded; }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
+        int level = scene.buildIndex;
+
+        // Debug.Log("MusicPlayer: loaded level " + level);
+        if (music) {
+            music.Stop();
+            if (level == 0) {
+                music.clip = startClip;
+            } else if (level == 1) {
+                music.clip = gameClip;
+            } else if (level == 2) {
+                music.clip = endClip;
+            }
+
+            music.loop = true;
+            music.Play();
+        }
+    }
+
+    // Use this for initialization
+    void Start () {
+        // Create a persistent music player and destroy new music player
+        // when we return to the start screen
+        // Debug.Log("Music player Start " + GetInstanceID());
+        if (instance != null && instance != this) { 
 			Destroy (gameObject);
 			Debug.Log("Duplicate music player self-destructing!");
 		} else {
@@ -30,26 +54,5 @@ public class MusicPlayer : MonoBehaviour {
 			music.loop = true;
 			music.Play();
 		}
-	}
-		
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
-	void OnLevelWasLoaded (int level) {
-		Debug.Log ("MusicPlayer: loaded level " + level);
-		music.Stop ();
-		
-		if (level == 0) {
-			music.clip = startClip;
-		} else if (level == 1) {
-			music.clip = gameClip;
-		} else if (level == 2) {
-			music.clip = endClip;
-		}
-		
-		music.loop = true;
-		music.Play ();
 	}
 }
