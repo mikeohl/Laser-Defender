@@ -1,5 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* FormationController handles enemy formation movement and spawning.
+ */
+
+using UnityEngine;
 
 public class FormationController : MonoBehaviour {
 
@@ -15,6 +17,7 @@ public class FormationController : MonoBehaviour {
 	
 	// Use this for initialization
 	void Start () {
+        // Initialize viewspace for formation movement control
 		float distanceToCamera = transform.position.z - Camera.main.transform.position.z;
 		Vector3 leftEdge = Camera.main.ViewportToWorldPoint(new Vector3(0,0,distanceToCamera));
 		Vector3 rightEdge = Camera.main.ViewportToWorldPoint(new Vector3(1,0,distanceToCamera));
@@ -23,21 +26,10 @@ public class FormationController : MonoBehaviour {
 		
 		SpawnUntilFull ();
 	}
-	
-	// Display the wireframe for GameDev
-	public void OnDrawGizmos () {
-		Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
-	}
-	
-	void SpawnFormation () {
-		foreach (Transform child in transform) {
-			GameObject enemy = Instantiate(enemyPrefab, child.transform.position, Quaternion.identity) as GameObject;
-			enemy.transform.parent = child;
-		}
-	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update () {
+        // Move formation left and right
 		if (direction) {
 			transform.position += Vector3.right * speed * Time.deltaTime;
 		} else {
@@ -49,12 +41,14 @@ public class FormationController : MonoBehaviour {
 			direction = true;
 		}
 		
+        // Respawn formation if all enemies defeated
 		if (AllMembersDead()) {
 			Debug.Log ("Empty Formation");
 			SpawnUntilFull ();
 		}
 	}
 	
+    // Fill formation with enemies until full
 	void SpawnUntilFull() {
 		Transform freePosition = NextFreePosition ();
 		if (freePosition) {
@@ -65,8 +59,9 @@ public class FormationController : MonoBehaviour {
 			Invoke ("SpawnUntilFull", spawnDelay);
 		}
 	}
-	
-	Transform NextFreePosition () {
+
+    // Find the first available free position in formation
+    Transform NextFreePosition () {
 		foreach (Transform childPositionGameObject in transform) {
 			if (childPositionGameObject.childCount == 0) {
 				return childPositionGameObject;
@@ -75,6 +70,7 @@ public class FormationController : MonoBehaviour {
 		return null;
 	}
 	
+    // Check if there are any enemies in the formation
 	bool AllMembersDead () {
 		foreach (Transform childPositionGameObject in transform) {
 			if (childPositionGameObject.childCount > 0) {
@@ -83,4 +79,9 @@ public class FormationController : MonoBehaviour {
 		}
 		return true;
 	}
+
+    // Display the wireframe for game development
+    public void OnDrawGizmos(){
+        Gizmos.DrawWireCube(transform.position, new Vector3(width, height, 0));
+    }
 }
