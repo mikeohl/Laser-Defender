@@ -1,5 +1,8 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* EnemyBehavior manages enemy health, enemy projectile attack, 
+ * and enemy destruction. 
+ */
+
+using UnityEngine;
 
 public class EnemyBehavior : MonoBehaviour {
 
@@ -27,12 +30,15 @@ public class EnemyBehavior : MonoBehaviour {
 		}
 	}
 	
+    // Fire enemy projectile
 	void Fire() {
 		GameObject laser = Instantiate (projectile, transform.position + new Vector3(0, -0.6f, 0),Quaternion.Euler (new Vector3(0,0,180))) as GameObject;		
-		laser.rigidbody2D.velocity = new Vector3(0, -projectileSpeed, 0);
+		laser.GetComponent<Rigidbody2D>().velocity = new Vector3(0, -projectileSpeed, 0);
 		AudioSource.PlayClipAtPoint(fireSound, transform.position);
 	}
 	
+    // Reduce health on collision with player laser projectile
+    // Destroy enemy object if health is gone
 	void OnTriggerEnter2D (Collider2D collider) {
 		Projectile laser = collider.gameObject.GetComponent<Projectile>();
 		if (laser) {
@@ -41,10 +47,10 @@ public class EnemyBehavior : MonoBehaviour {
 			if (health <= 0) {
 				Explode();
 			}
-			// Debug.Log ("Hit by a projectile");
 		}
 	}
 	
+    // Play explosion audio and destroy this game object
 	void Explode () {
 		AudioSource.PlayClipAtPoint(explosionSound, transform.position);
 		Destroy (gameObject);
