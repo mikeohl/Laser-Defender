@@ -1,25 +1,15 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* Projectile tracks projectile damage and can destroy
+ * itself on hit of ship 
+ */
+
+using UnityEngine;
 
 public class Projectile : MonoBehaviour {
 
 	public float damage;
 
-	// Use this for initialization
-	void Start () {
+	public float GetDamage () { return damage; }
 	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
-	public float GetDamage () {
-		return damage;
-	}
-	
-	public void Hit () {
-		Destroy(gameObject);
-	}
+    // Destroys projectile game object. Call when ship is hit
+	public void Hit () { Destroy(gameObject); }
 }
