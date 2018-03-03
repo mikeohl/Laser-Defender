@@ -1,18 +1,12 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* Position uses OnDrawGizmos to visualize position of
+ * enemy spawn points in editor
+ */
 
+using UnityEngine;
+
+// Visualize enemy spawn points in editor
 public class Position : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-	
 	void OnDrawGizmos() {
 		Gizmos.DrawWireSphere(transform.position, 1);
 	}
