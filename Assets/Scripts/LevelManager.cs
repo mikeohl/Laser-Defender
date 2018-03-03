@@ -1,30 +1,24 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿/* LevelManager is responsible for loading the 
+ * next scene and quiting the application.
+ * Uses Unity Scene Management for loading scenes. 
+ */
 
-public class LevelManager : MonoBehaviour {
-	
-	public void LoadLevel (string name) {
-		Debug.Log ("Level load requested for: " + name);
-/* 
-		Brick.breakableCount = 0; 
-*/
-		Application.LoadLevel(name);
-	}
-	
-	public void QuitRequest () {
-		Debug.Log ("Player wants to quit");
-		Application.Quit();
-	}
-	
-	public void LoadNextLevel () {
-		Application.LoadLevel(Application.loadedLevel + 1);
-	}
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
-/*
-	public void BrickDestroyed() {
-		if (Brick.breakableCount <= 0) {
-			LoadNextLevel();
-		}
-	}
-*/
+public class LevelManager : MonoBehaviour
+{
+    public void LoadLevel(string name) {
+        // Debug.Log("Level load requested for: " + name);
+        SceneManager.LoadScene(name, LoadSceneMode.Single);
+    }
+
+    public void LoadNextLevel() {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void QuitRequest() {
+        // Debug.Log("Player wants to quit");
+        Application.Quit();
+    }
 }
